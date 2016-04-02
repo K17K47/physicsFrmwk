@@ -1,6 +1,8 @@
 #ifndef PARTICLE_HPP_
 #define PARTICLE_HPP_
 
+#include"aux/math.hpp"
+
 namespace Physics{
 
 	class Particle{
