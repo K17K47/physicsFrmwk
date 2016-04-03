@@ -4,12 +4,12 @@ namespace Physics{
    unsigned pWorld::dataInsert(Particle p){
       unsigned idx;
 
-      pos.push_back(p);
-      vel.push_back(p);
-      acc.push_back(p);
-      fAcc.push_back(p);
-      invMass.push_back(p);
-      life.push_back(p);
+      pos.push_back(p.getPos());
+      vel.push_back(p.getVel());
+      acc.push_back(p.getAcc());
+      fAcc.push_back(p.getForce());
+      invMass.push_back(p.getInvMass());
+      life.push_back(p.getLife());
 
       if(!(free.size())){
          idx=indirection.size()-1;
