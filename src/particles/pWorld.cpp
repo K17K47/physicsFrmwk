@@ -63,8 +63,13 @@ namespace Physics{
       integrate(dt);
    }
 
+   unsigned pWorld::newParticle(){
+      Particle p;
+      return dataInsert(p);
+   }
+
    unsigned pWorld::addParticle(Particle p){
-      return addParticle(p);
+      return dataInsert(p);
    }
 
    unsigned pWorld::addParticle(Particle *p){

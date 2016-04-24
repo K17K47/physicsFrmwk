@@ -27,6 +27,8 @@ namespace Physics{
 
          void simulateParticles(real dt);
 
+         unsigned newParticle();
+
          unsigned addParticle(Particle p);
          unsigned addParticle(Particle *p);
          void rmParticle(unsigned idx);
