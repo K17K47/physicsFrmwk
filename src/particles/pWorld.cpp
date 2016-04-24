@@ -1,4 +1,5 @@
 #include"particles/pWorld.hpp"
+#include<iostream>
 
 namespace Physics{
    unsigned pWorld::dataInsert(Particle p){
@@ -12,14 +13,15 @@ namespace Physics{
       life.push_back(p.getLife());
 
       if(!(free.size())){
-         idx=indirection.size()-1;
+         idx=indirection.size();
          bReference.push_back(idx);
-         indirection.push_back(pos.size()-2);
+         indirection.push_back(pos.size()-1);
       }else{
          idx=free.back();
          bReference.push_back(idx);
-         indirection[idx]=pos.size()-2;
+         indirection[idx]=pos.size()-1;
       }
+
       return idx;
    }
 
@@ -52,10 +54,11 @@ namespace Physics{
       Vector3 tmpAcc = Vector3::Zero();
 
       for(i=0;i<size;i++){
-         tmpAcc=(acc[i]+forceAcc[i]*invMass[i])*dt;
-         forceAcc[i]=Vector3::Zero();
+         tmpAcc=(acc[i]+fAcc[i]*invMass[i])*dt;
+         fAcc[i]=Vector3::Zero();
          pos[i]+=vel[i]+tmpAcc*0.5*dt;
          vel[i]+=tmpAcc;
+         life[i]-=dt;
       }
    }
 
@@ -95,19 +98,19 @@ namespace Physics{
    }
 
    void pWorld::addForce(const unsigned idx, const Vector3 &f){
-      fAcc[indirection[idx]] += f
+      fAcc[indirection[idx]] += f;
    }
 
-   void pWorld::setPos(const unsigned idx, const Vector3 &pos){
-      this.pos[indirection[idx]] = pos;
+   void pWorld::setPos(const unsigned idx, const Vector3 &position){
+      pos[indirection[idx]] = position;
    }
 
    void pWorld::setVel(const unsigned idx, const Vector3 &vel){
-      this.vel[indirection[idx]] = vel;
+      this->vel[indirection[idx]] = vel;
    }
 
    void pWorld::setAcc(const unsigned idx, const Vector3 &acc){
-      this.acc[indirection[idx]] = acc;
+      this->acc[indirection[idx]] = acc;
    }
 
    void pWorld::setMass(const unsigned idx, const real &m){
@@ -179,7 +182,7 @@ namespace Physics{
       return fAcc[indirection[idx]];
    }
 
-   void pWorld::getForce(const unsigned idx, Vector3 *f) const
+   void pWorld::getForce(const unsigned idx, Vector3 *f) const{
       *f = fAcc[indirection[idx]];
    }
 

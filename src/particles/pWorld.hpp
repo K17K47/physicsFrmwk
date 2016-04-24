@@ -37,7 +37,7 @@ namespace Physics{
 
          void addForce(const unsigned idx, const Vector3 &f);
 
-         void setPos(const unsigned idx, const Vector3 &pos);
+         void setPos(const unsigned idx, const Vector3 &position);
          void setVel(const unsigned idx, const Vector3 &vel);
          void setAcc(const unsigned idx, const Vector3 &acc);
          void setMass(const unsigned idx, const real &m);

@@ -18,7 +18,7 @@ namespace Physics{
 			real life = 0.0;
 
 		public:
-			Particle();
+			Particle(){};
 			Particle(Vector3 pos, real mass) : p(pos),  invMass(1/mass) {}
 			Particle(Vector3 pos, Vector3 vel, real mass) : p(pos), v(vel), invMass(1/mass) {}
 
