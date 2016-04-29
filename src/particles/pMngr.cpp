@@ -58,7 +58,7 @@ namespace Physics{
          fAcc[i]=Vector3::Zero();
          pos[i]+=vel[i]+tmpAcc*0.5*dt;
          vel[i]+=tmpAcc;
-         life[i]-=dt;
+         if(life[i]) life[i]-=dt;
       }
    }
 
@@ -76,7 +76,7 @@ namespace Physics{
    }
 
    unsigned pMngr::add(Particle *p){
-      return addParticle(*p);
+      return add(*p);
    }
 
    void pMngr::remove(unsigned idx){

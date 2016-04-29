@@ -1,10 +1,14 @@
 #ifndef PFORCEGENS_HPP_
 #define PFORCEGENS_HPP_
 
-#include"particles/pWorld.hpp"
-#include"aux/math.h"
+#include"particles/pMngr.hpp"
+#include"aux/math.hpp"
 
 namespace Physics{
+   class pForceGen{
+      public:
+         virtual void updateForce(pMngr* particles, real dt) = 0;
+   };
 
    class pForceGens{
       private:

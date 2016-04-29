@@ -4,14 +4,14 @@
 namespace Physics{
    pWorld::pWorld(){
       particles = new pMngr;
-      //forceGens = new pForceGens;
+      forceGens = new pForceGens;
       //collisions = new pCollisions;
       //generators = new pGenerators;
    }
 
    pWorld::~pWorld(){
       delete particles;
-      //delete forceGens;
+      delete forceGens;
       //delete collisions;
       //delete generators;
    }
@@ -19,7 +19,7 @@ namespace Physics{
    void pWorld::runPhysics(real dt){
       //generators->runGenerators(particles, dt);
       //collisions->resolveCollisions(particles, dt);
-      //forceGens->updateForces(particles, dt);
+      forceGens->updateForces(particles, dt);
       particles->simulateParticles(dt);
    }
 };
