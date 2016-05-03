@@ -5,6 +5,10 @@ namespace Physics{
       force += f;
    }
 
+   void Particle::addImpulse(const Vector3 &i){
+      impulse += i;
+   }
+
    void Particle::setPos(const Vector3 &pos){
       p = pos;
    }
@@ -95,5 +99,17 @@ namespace Physics{
 
    void Particle::clearForce(){
       force = Vector3::Zero();
+   }
+
+   Vector3 Particle::getImpulse() const{
+      return impulse;
+   }
+
+   void Particle::getImpulse(Vector3 *i) const{
+      *i = impulse;
+   }
+
+   void Particle::clearImpulse(){
+      impulse = Vector3::Zero();
    }
 };

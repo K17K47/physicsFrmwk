@@ -11,6 +11,7 @@ namespace Physics{
 			std::vector<Vector3> vel;
 			std::vector<Vector3> acc;
 			std::vector<Vector3> fAcc;
+         std::vector<Vector3> iAcc;
 
 			std::vector<real> invMass;
 			std::vector<real> life;
@@ -36,6 +37,7 @@ namespace Physics{
          Particle get(unsigned idx);
 
          void addForce(const unsigned idx, const Vector3 &f);
+         void addImpulse(const unsigned idx, const Vector3 &i);
 
          void setPos(const unsigned idx, const Vector3 &position);
          void setVel(const unsigned idx, const Vector3 &vel);
@@ -63,6 +65,10 @@ namespace Physics{
          Vector3 getForce(const unsigned idx) const;
          void getForce(const unsigned idx, Vector3 *f) const;
          void clearForce(const unsigned idx);
+
+         Vector3 getImpulse(const unsigned idx) const;
+         void getImpulse(const unsigned idx, Vector3 *f) const;
+         void clearImpulse(const unsigned idx);
 	};
 };
 

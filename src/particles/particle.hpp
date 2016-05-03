@@ -12,6 +12,7 @@ namespace Physics{
 			Vector3 a = Vector3::Zero();
 
 			Vector3 force = Vector3::Zero();
+         Vector3 impulse = Vector3::Zero();
 
 			real invMass = 0.0;
 
@@ -23,6 +24,7 @@ namespace Physics{
 			Particle(Vector3 pos, Vector3 vel, real mass) : p(pos), v(vel), invMass(1/mass) {}
 
 			void addForce(const Vector3 &f);
+         void addImpulse(const Vector3 &i);
 
 			void setPos(const Vector3 &pos);
 			void setVel(const Vector3 &vel);
@@ -50,6 +52,10 @@ namespace Physics{
 			Vector3 getForce() const;
 			void getForce(Vector3 *f) const;
 			void clearForce();
+
+         Vector3 getImpulse() const;
+         void getImpulse(Vector3 *f) const;
+         void clearImpulse();
 	};
 };
 

@@ -1,5 +1,4 @@
 #include"particles/pMngr.hpp"
-#include<iostream>
 
 namespace Physics{
    unsigned pMngr::dataInsert(Particle p){
@@ -9,6 +8,7 @@ namespace Physics{
       vel.push_back(p.getVel());
       acc.push_back(p.getAcc());
       fAcc.push_back(p.getForce());
+      iAcc.push_back(p.getImpulse());
       invMass.push_back(p.getInvMass());
       life.push_back(p.getLife());
 
@@ -32,6 +32,7 @@ namespace Physics{
       vel[indir] = vel.back();
       acc[indir] = acc.back();
       fAcc[indir] = fAcc.back();
+      iAcc[indir] = iAcc.back();
       invMass[indir] = invMass.back();
       life[indir] = life.back();
 
@@ -45,6 +46,7 @@ namespace Physics{
       vel.pop_back();
       acc.pop_back();
       fAcc.pop_back();
+      iAcc.pop_back();
       invMass.pop_back();
       life.pop_back();
    }
@@ -56,7 +58,9 @@ namespace Physics{
       for(i=0;i<size;i++){
          tmpAcc=(acc[i]+fAcc[i]*invMass[i])*dt;
          fAcc[i]=Vector3::Zero();
-         pos[i]+=vel[i]+tmpAcc*0.5*dt;
+         vel[i]+=iAcc[i]*invMass[i];
+         iAcc[i]=Vector3::Zero();
+         pos[i]+=(vel[i]+tmpAcc*0.5)*dt;
          vel[i]+=tmpAcc;
          if(life[i]) life[i]-=dt;
       }
@@ -90,6 +94,7 @@ namespace Physics{
       p.setVel(vel[indirection[idx]]);
       p.setAcc(acc[indirection[idx]]);
       p.clearForce();
+      p.clearImpulse();
       p.addForce(fAcc[indirection[idx]]);
       p.setLife(life[indirection[idx]]);
       p.setMass(1.0/invMass[indirection[idx]]);
@@ -99,6 +104,10 @@ namespace Physics{
 
    void pMngr::addForce(const unsigned idx, const Vector3 &f){
       fAcc[indirection[idx]] += f;
+   }
+
+   void pMngr::addImpulse(const unsigned idx, const Vector3 &i){
+      iAcc[indirection[idx]] += i;
    }
 
    void pMngr::setPos(const unsigned idx, const Vector3 &position){
@@ -188,5 +197,17 @@ namespace Physics{
 
    void pMngr::clearForce(const unsigned idx){
       fAcc[indirection[idx]] = Vector3::Zero();
+   }
+
+   Vector3 pMngr::getImpulse(const unsigned idx) const{
+      return iAcc[indirection[idx]];
+   }
+
+   void pMngr::getImpulse(const unsigned idx, Vector3 *i) const{
+      *i = iAcc[indirection[idx]];
+   }
+
+   void pMngr::clearImpulse(const unsigned idx){
+      iAcc[indirection[idx]] = Vector3::Zero();
    }
 };
