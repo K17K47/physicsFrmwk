@@ -9,7 +9,19 @@
 #include<eigen3/Eigen/Core>
 #include<eigen3/Eigen/Geometry>
 
-#ifndef SINGLEP
+#define QUADP
+
+#ifdef QUADP
+   #define real_sqrt sqrtl
+   #define real_pow powl
+   #define real_abs fabsl
+   #define real_sin sinl
+   #define real_cos cosl
+   #define real_exp expl
+
+   #define REAL_MAX LDBL_MAX
+   typedef long double real;
+#elif DOUBLEP
    #define real_sqrt sqrtl
    #define real_pow powl
    #define real_abs fabsl
