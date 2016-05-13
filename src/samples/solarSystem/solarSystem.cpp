@@ -1,10 +1,6 @@
 #include<iostream>
 #include"physics.hpp"
-#include"particles/particle.hpp"
 #include"aux/math.hpp"
-#include"particles/pForceGens.hpp"
-#include"particles/forceGenerators.hpp"
-
 /*
  * Simulação simplificada do Sistema Solar
 */
