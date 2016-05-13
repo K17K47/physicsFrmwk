@@ -2,9 +2,12 @@
 #define PHYSICS_HPP
 //PHYSICS_H
 
-//#include "world.hpp"
+//Particles
+#include "particles/particle.hpp"
+#include "particles/pMngr.hpp"
 #include "particles/pWorld.hpp"
-//#include "rigid/rigidbody.hpp"
+#include "particles/pForceGens.hpp"
+#include "particles/forceGenerators.hpp"
 
 //PHYSICS_H
 #endif
