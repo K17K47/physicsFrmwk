@@ -1,3 +1,10 @@
+/**
+ *  @file physics.hpp
+ *  Main header, contains includes for the entire framework
+ *
+ *  @brief Main header
+*/
+
 #ifndef PHYSICS_HPP
 #define PHYSICS_HPP
 //PHYSICS_H
