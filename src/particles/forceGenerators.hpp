@@ -38,6 +38,17 @@ namespace Physics{
          void updateForce(pMngr* particles, real dt);
    };
 
+   class fgGravity : public pForceGen{
+      private:
+         unsigned p1;
+         unsigned p2;
+         real k1;
+
+         Vector3 force(pMngr* particles, real dt, Vector3 velocity);
+      public:
+         fgGravity(unsigned p1, unsigned p2, real k1);
+         void updateForce(pMngr* particles, real dt);
+   };
 };
 
 #endif
