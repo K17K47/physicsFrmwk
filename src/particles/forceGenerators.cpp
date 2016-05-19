@@ -10,21 +10,18 @@ namespace Physics{
    }
 
    void fgSpring::updateForce(pMngr* particles, real dt){
-      Vector3 c1 = acceleration(particles, 0.0, Vector3::Zero());
-      Vector3 c2 = acceleration(particles, 0.5*dt, 0.5*dt*c1);
-      Vector3 c3 = acceleration(particles, 0.5*dt, 0.5*dt*c2);
-      Vector3 c4 = acceleration(particles, dt, dt*c3);
+      Vector3 c1 = force(particles, 0.0, Vector3::Zero());
+      Vector3 c2 = force(particles, 0.5*dt, 0.5*dt*c1);
+      Vector3 c3 = force(particles, 0.5*dt, 0.5*dt*c2);
+      Vector3 c4 = force(particles, dt, dt*c3);
 
-      Vector3 v = (1.0/6.0)*dt*(c1+c4+2*(c2+c3));
+      Vector3 i = (1.0/6.0)*dt*(c1+c4+2*(c2+c3));
 
-      //particles->setVel(p1, particles->getVel(p1)+v);
-      //particles->setVel(p2, particles->getVel(p2)-v);
-
-      particles->addImpulse(p1, particles->getMass(p1)*v);
-      particles->addImpulse(p2, (-1)*particles->getMass(p2)*v);
+      particles->addImpulse(p1, i);
+      particles->addImpulse(p2, -i);
    }
 
-   Vector3 fgSpring::acceleration(pMngr* particles, real dt, Vector3 velocity){
+   Vector3 fgSpring::force(pMngr* particles, real dt, Vector3 impulse){
       real d = (particles->getPos(p2) - particles->getPos(p1)).norm();
       return ((k1*(d-d0))/d)*(particles->getPos(p2) - particles->getPos(p1));
    }

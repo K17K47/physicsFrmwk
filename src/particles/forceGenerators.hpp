@@ -14,7 +14,7 @@ namespace Physics{
          real k1;
          real d0;
 
-         Vector3 acceleration(pMngr* particles, real dt, Vector3 velocity);
+         Vector3 force(pMngr* particles, real dt, Vector3 impulse);
       public:
          fgSpring(unsigned p1, unsigned p2, real k1, real x0);
          void updateForce(pMngr* particles, real dt);
