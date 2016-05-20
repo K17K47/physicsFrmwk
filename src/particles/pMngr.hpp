@@ -3,6 +3,8 @@
 
 #include"aux/math.hpp"
 #include"particles/particle.hpp"
+#include<thread>
+#include<mutex>
 
 namespace Physics{
 	class pMngr{
@@ -23,7 +25,12 @@ namespace Physics{
          unsigned dataInsert(Particle p);
          void dataErase(unsigned idx);
 
-         void integrate(real dt);
+         void integrate(real dt, unsigned start, unsigned end);
+
+         unsigned ncpus = std::thread::hardware_concurrency();
+
+         std::vector<std::thread> threads;
+         std::mutex mtx;
       public:
 
          void simulateParticles(real dt);

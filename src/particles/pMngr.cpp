@@ -4,6 +4,8 @@ namespace Physics{
    unsigned pMngr::dataInsert(Particle p){
       unsigned idx;
 
+      std::lock_guard<std::mutex> guard(mtx);
+
       pos.push_back(p.getPos());
       vel.push_back(p.getVel());
       acc.push_back(p.getAcc());
@@ -28,6 +30,8 @@ namespace Physics{
    void pMngr::dataErase(unsigned idx){
       unsigned indir = indirection[idx];
 
+      std::lock_guard<std::mutex> guard(mtx);
+
       pos[indir] = pos.back();
       vel[indir] = vel.back();
       acc[indir] = acc.back();
@@ -51,11 +55,11 @@ namespace Physics{
       life.pop_back();
    }
 
-   void pMngr::integrate(real dt){
-      unsigned size = pos.size(), i;
+   void pMngr::integrate(real dt, unsigned start, unsigned end){
+      unsigned i;
       Vector3 tmpAcc = Vector3::Zero();
 
-      for(i=0;i<size;i++){
+      for(i=start;i<end;i++){
          tmpAcc=(acc[i]+fAcc[i]*invMass[i])*dt;
          fAcc[i]=Vector3::Zero();
          vel[i]+=iAcc[i]*invMass[i];
@@ -67,7 +71,22 @@ namespace Physics{
    }
 
    void pMngr::simulateParticles(real dt){
-      integrate(dt);
+      if(!ncpus || ( pos.size() < ncpus )){
+         integrate(dt, 0, pos.size());
+      } else {
+         unsigned tPerCore = pos.size()/ncpus, i;
+
+         for(i=0; i<ncpus-1; i++){
+            threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, (i+1)*tPerCore));
+         }
+
+         threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, pos.size()));
+
+         for(i=0; i<ncpus; i++) threads[i].join();
+
+         threads.clear();
+
+      }
    }
 
    unsigned pMngr::newParticle(){
@@ -90,6 +109,8 @@ namespace Physics{
    Particle pMngr::get(unsigned idx){
       Particle p;
 
+      std::lock_guard<std::mutex> guard(mtx);
+
       p.setPos(pos[indirection[idx]]);
       p.setVel(vel[indirection[idx]]);
       p.setAcc(acc[indirection[idx]]);
@@ -103,30 +124,37 @@ namespace Physics{
    }
 
    void pMngr::addForce(const unsigned idx, const Vector3 &f){
+      std::lock_guard<std::mutex> guard(mtx);
       fAcc[indirection[idx]] += f;
    }
 
    void pMngr::addImpulse(const unsigned idx, const Vector3 &i){
+      std::lock_guard<std::mutex> guard(mtx);
       iAcc[indirection[idx]] += i;
    }
 
    void pMngr::setPos(const unsigned idx, const Vector3 &position){
+      std::lock_guard<std::mutex> guard(mtx);
       pos[indirection[idx]] = position;
    }
 
    void pMngr::setVel(const unsigned idx, const Vector3 &vel){
+      std::lock_guard<std::mutex> guard(mtx);
       this->vel[indirection[idx]] = vel;
    }
 
    void pMngr::setAcc(const unsigned idx, const Vector3 &acc){
+      std::lock_guard<std::mutex> guard(mtx);
       this->acc[indirection[idx]] = acc;
    }
 
    void pMngr::setMass(const unsigned idx, const real &m){
+      std::lock_guard<std::mutex> guard(mtx);
       invMass[indirection[idx]] = 1.0/m;
    }
 
    void pMngr::setLife(const unsigned idx, const real &l){
+      std::lock_guard<std::mutex> guard(mtx);
       life[indirection[idx]] = l;
    }
 

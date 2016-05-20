@@ -3,6 +3,7 @@
 
 #include"particles/pMngr.hpp"
 #include"aux/math.hpp"
+#include<thread>
 
 namespace Physics{
    class pForceGen{
@@ -20,6 +21,12 @@ namespace Physics{
 
          unsigned dataInsert(pForceGen *fg);
          void dataErase(unsigned idx);
+
+         unsigned ncpus = std::thread::hardware_concurrency();
+
+         std::vector<std::thread> threads;
+
+         void update(pMngr* particles, real dt, unsigned start, unsigned end);
       public:
          unsigned add(pForceGen *fg);
          void remove(unsigned idx);
