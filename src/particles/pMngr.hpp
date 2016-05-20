@@ -4,6 +4,7 @@
 #include"aux/math.hpp"
 #include"particles/particle.hpp"
 #include<thread>
+#include<mutex>
 
 namespace Physics{
 	class pMngr{
@@ -29,6 +30,7 @@ namespace Physics{
          unsigned ncpus = std::thread::hardware_concurrency();
 
          std::vector<std::thread> threads;
+         std::mutex mtx;
       public:
 
          void simulateParticles(real dt);
