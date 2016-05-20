@@ -51,11 +51,11 @@ namespace Physics{
       life.pop_back();
    }
 
-   void pMngr::integrate(real dt){
-      unsigned size = pos.size(), i;
+   void pMngr::integrate(real dt, unsigned start, unsigned end){
+      unsigned i;
       Vector3 tmpAcc = Vector3::Zero();
 
-      for(i=0;i<size;i++){
+      for(i=start;i<end;i++){
          tmpAcc=(acc[i]+fAcc[i]*invMass[i])*dt;
          fAcc[i]=Vector3::Zero();
          vel[i]+=iAcc[i]*invMass[i];
@@ -67,7 +67,22 @@ namespace Physics{
    }
 
    void pMngr::simulateParticles(real dt){
-      integrate(dt);
+      if(!ncpus){
+         integrate(dt, 0, pos.size());
+      } else {
+         unsigned tPerCore = pos.size()/ncpus, i;
+
+         for(i=0; i<ncpus-1; i++){
+            threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, (i+1)*tPerCore-1));
+         }
+
+         threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, pos.size()));
+
+         for(i=0; i<ncpus; i++) threads[i].join();
+
+         threads.clear();
+
+      }
    }
 
    unsigned pMngr::newParticle(){
