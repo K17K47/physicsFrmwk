@@ -51,9 +51,26 @@ namespace Physics{
    }
 
    void pForceGens::updateForces(pMngr* particles, real dt){
-      for(unsigned i = 0; i<forceGens.size(); i++){
-         forceGens[i]->updateForce(particles, dt);
+      if(!ncpus || (forceGens.size() < ncpus)){
+         update(particles, dt, 0, forceGens.size());
+      } else {
+         unsigned tPerCore = forceGens.size()/ncpus, i;
+
+         for(i=0; i<ncpus-1; i++){
+            threads.push_back(std::thread(&pForceGens::update, this, particles, dt, i*tPerCore, (i+1)*tPerCore));
+         }
+
+         threads.push_back(std::thread(&pForceGens::update, this, particles, dt, i*tPerCore, forceGens.size()));
+
+         for(i=0; i<ncpus; i++) threads[i].join();
+
+         threads.clear();
       }
    }
 
+   void pForceGens::update(pMngr* particles, real dt, unsigned start, unsigned end){
+      for(unsigned i=start; i<end; i++){
+         forceGens[i]->updateForce(particles, dt);
+      }
+   }
 };
