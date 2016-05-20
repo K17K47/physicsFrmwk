@@ -35,7 +35,7 @@ namespace Physics{
    void fgLinearDamper::updateForce(pMngr* particles, real dt){
       Vector3 f = particles->getVel(p);
       real d = f.norm();
-      f *= -(k*particles->getMass(p))/dt;
+      f *= -(k*particles->getMass(p));
       particles->addForce(p, f);
    }
 
@@ -49,7 +49,7 @@ namespace Physics{
       //real d = f.norm();
       if(f.norm()){
          f.normalize();
-         f *= -(k*particles->getMass(p))/dt;
+         f *= -(k*particles->getMass(p));
          particles->addForce(p, f);
       }
    }
