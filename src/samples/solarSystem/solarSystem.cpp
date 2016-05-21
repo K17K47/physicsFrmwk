@@ -6,7 +6,7 @@
 */
 
 #define NOBJ 13      //Número de objetos inclusos na simulacao
-#define TMAX 5478.75 //Tempo final da simulacao: +15 anos
+#define TMAX 10957.5 //Tempo final da simulacao: +30 anos
 #define DELTAT 1e-3  //Passo da simulacao: 1x10^-3 dia
 
 int main(){
@@ -167,7 +167,7 @@ int main(){
     *
     */
    world.particles->setPos(pIdx[10], Vector3(146.8691616e6, 0.0, 13.2240012e6));
-   world.particles->setVel(pIdx[10], Vector3(0.0, -2710022.4, 0.0));
+   world.particles->setVel(pIdx[10], Vector3(0.0, 2710022.4, 0.0));
    world.particles->setAcc(pIdx[10], Vector3::Zero());
    world.particles->setMass(pIdx[10], 7.346e22);
 
@@ -207,7 +207,6 @@ int main(){
 
    double t = 0.0;
    while(t < TMAX){
-      //std::cout<<t;
       for(int i=0; i<NOBJ; i++){
          if(world.particles->stillAlive(pIdx[i])){
             Vector3 pos = world.particles->getPos(pIdx[i]);
@@ -217,7 +216,6 @@ int main(){
          }
       }
       std::cout<<std::endl;
-      //std::cout<<"\t"<<(world.particles->getPos(pIdx[0])-world.particles->getPos(pIdx[1])).norm()<<std::endl;
 
       world.runPhysics(DELTAT);
       t+=DELTAT;
