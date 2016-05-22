@@ -3,8 +3,8 @@
 
 #include"aux/logger.hpp"
 
-static Logger& Logger::instance(){
-   static Logger _instance();
+Logger& Logger::instance(){
+   static Logger _instance;
    return _instance;
 }
 

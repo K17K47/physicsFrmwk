@@ -6,7 +6,7 @@
 
 class Logger{
    public:
-      static Logger& instance();
+      Logger& instance();
       void printMsg(std::string funcID, std::string msg);
 
       std::chrono::time_point<std::chrono::steady_clock> start=std::chrono::steady_clock::now();
@@ -18,3 +18,5 @@ class Logger{
       Logger(Logger const&) = delete;
       void operator=(Logger const&) = delete;
 };
+
+#endif

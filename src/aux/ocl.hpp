@@ -3,7 +3,7 @@
 
 #define CL_VERSION_1_2
 
-#include<CL/CL.hpp>
+#include<CL/cl2.hpp>
 
 class OCLcntxt{
    private:
