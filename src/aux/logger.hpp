@@ -6,7 +6,7 @@
 
 class Logger{
    public:
-      Logger& instance();
+      static Logger& instance();
       void printMsg(std::string funcID, std::string msg);
 
       std::chrono::time_point<std::chrono::steady_clock> start=std::chrono::steady_clock::now();
