@@ -22,8 +22,9 @@ namespace Physics{
    }
 
    Vector3 fgSpring::force(pMngr* particles, real dt, Vector3 impulse){
-      real d = (particles->getPos(p2) - particles->getPos(p1)).norm();
-      return ((k1*(d-d0))/d)*(particles->getPos(p2) - particles->getPos(p1));
+      Vector3 vd = particles->getPos(p2) - particles->getPos(p1);
+      real d = vd.norm();
+      return ((k1*(d-d0))/d)*vd;
    }
 
 
@@ -34,7 +35,6 @@ namespace Physics{
 
    void fgLinearDamper::updateForce(pMngr* particles, real dt){
       Vector3 f = particles->getVel(p);
-      real d = f.norm();
       f *= -(k*particles->getMass(p));
       particles->addForce(p, f);
    }
@@ -46,7 +46,6 @@ namespace Physics{
 
    void fgDrag::updateForce(pMngr* particles, real dt){
       Vector3 f = particles->getVel(p);
-      //real d = f.norm();
       if(f.norm()){
          f.normalize();
          f *= -(k*particles->getMass(p));
@@ -68,16 +67,14 @@ namespace Physics{
 
       Vector3 i = (1.0/6.0)*dt*(c1+c4+2*(c2+c3));
 
-      //particles->setVel(p1, particles->getVel(p1)+v);
-      //particles->setVel(p2, particles->getVel(p2)-v);
-
       particles->addImpulse(p1, i);
       particles->addImpulse(p2, -i);
    }
 
    Vector3 fgGravity::force(pMngr* particles, real dt, Vector3 velocity){
-      real d = (particles->getPos(p2) - particles->getPos(p1)).norm();
-      return (k1/(d*d*d))*particles->getMass(p1)*particles->getMass(p2)*(particles->getPos(p2) - particles->getPos(p1));
+      Vector3 vd = particles->getPos(p2) - particles->getPos(p1);
+      real d = vd.norm();
+      return (k1/(d*d*d))*particles->getMass(p1)*particles->getMass(p2)*vd;
    }
 };
 
