@@ -1,3 +1,7 @@
+/*
+ * Particles World Header
+ */
+
 #ifndef PWORLD_HPP_
 #define PWORLD_HPP_
 
