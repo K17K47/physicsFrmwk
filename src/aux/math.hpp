@@ -4,10 +4,11 @@
 #include<math.h>
 #include<float.h>
 
-#include<vector>
-
 #include<eigen3/Eigen/Core>
+#include<eigen3/Eigen/Dense>
 #include<eigen3/Eigen/Geometry>
+
+#include<vector>
 
 #define QUADP
 
@@ -44,12 +45,12 @@
    typedef float real;
 #endif
 
-typedef Eigen::Matrix<real, 2, 1> Vector2;
-typedef Eigen::Matrix<real, 3, 1> Vector3;
-typedef Eigen::Matrix<real, 4, 1> Vector4;
-typedef Eigen::Matrix<real, 3, 3> Matrix33;
-typedef Eigen::Matrix<real, 3, 4> Matrix34;
-typedef Eigen::Matrix<real, 4, 4> Matrix44;
+typedef Eigen::Matrix<real, 2, 1, 0, 2, 1> Vector2;
+typedef Eigen::Matrix<real, 3, 1, 0, 3, 1> Vector3;
+typedef Eigen::Matrix<real, 4, 1, 0, 4, 1> Vector4;
+typedef Eigen::Matrix<real, 3, 3, 0, 3, 3> Matrix33;
+typedef Eigen::Matrix<real, 3, 4, 0, 3, 4> Matrix34;
+typedef Eigen::Matrix<real, 4, 4, 0, 4, 4> Matrix44;
 typedef Eigen::Quaternion<real> Quaternion;
 typedef Eigen::AngleAxis<real> AngleAxis;
 typedef Eigen::Translation<real, 3> Translation3;
