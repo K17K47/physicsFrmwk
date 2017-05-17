@@ -194,7 +194,7 @@ int main(){
     *
     */
    world.particles->setPos(pIdx[12], Vector3(-83.51564035e6, 0.0, 26.65324071e6));
-   world.particles->setPos(pIdx[12], Vector3(0.0, 4665600, 0.0));
+   world.particles->setVel(pIdx[12], Vector3(0.0, 4665600, 0.0));
    world.particles->setAcc(pIdx[12], Vector3::Zero());
    world.particles->setMass(pIdx[12], 2.2e14);
 
