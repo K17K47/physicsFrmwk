@@ -2,7 +2,7 @@
 #define OCL_HPP_
 
 #define CL_VERSION_1_2
-
+/*
 #include<CL/cl2.hpp>
 
 class OCLcntxt{
@@ -13,5 +13,5 @@ class OCLcntxt{
    public:
       int init();
 };
-
+*/
 #endif

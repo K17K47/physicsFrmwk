@@ -1,5 +1,5 @@
 #include<vector>
-
+/*
 #include"aux/logger.hpp"
 #include"aux/ocl.hpp"
 
@@ -40,3 +40,4 @@ int OCLcntxt::init(){
 
    return 0;
 }
+*/
