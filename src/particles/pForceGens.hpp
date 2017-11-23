@@ -13,6 +13,28 @@ namespace Physics{
          virtual void updateForce(pMngr* particles, real dt) = 0;
    };
 
+   /*
+    * Force Generators should inherit the class pForceGen as public, and
+    * implement force and/or impulse calculation inside updateForce,
+    * overriding it.
+    * Example:
+    *
+    * class genericForceGen : public pForceGen{
+    *    private:
+    *       unsigned particleIdx;
+    *       real springConst;
+    *    public:
+    *       void updateForce(pMngr* particles, real dt);
+    * };
+    *
+    * void genericDragForceGen::updateForce(){
+    *    Vector3 f = particles->getVel(particleIdx);
+    *    f *= -(springConst * particles->getMass(particleIdx));
+    *    particles->addForce(particleIdx, f);
+    * }
+    *
+    */
+
    class pForceGens{
       private:
          // Registry of Force Generators
