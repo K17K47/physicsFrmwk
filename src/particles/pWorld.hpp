@@ -14,6 +14,7 @@ namespace Physics{
 
    class pWorld{
       public:
+         // Object manager instances
          pMngr* particles;
          pForceGens* forceGens;
          //Physics::pCollisions* collisions;
@@ -21,6 +22,8 @@ namespace Physics{
       public:
          pWorld();
          ~pWorld();
+
+         // Run manager instances over a timestep "dt"
          void runPhysics(real dt);
    };
 

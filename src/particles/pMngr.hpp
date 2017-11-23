@@ -7,42 +7,50 @@
 #include<mutex>
 
 namespace Physics{
+
 	class pMngr{
 		private:
-			std::vector<Vector3> pos;
-			std::vector<Vector3> vel;
-			std::vector<Vector3> acc;
-			std::vector<Vector3> fAcc;
-         std::vector<Vector3> iAcc;
+         // Registry of particles proprieties
+			std::vector<Vector3> pos;  //Position
+			std::vector<Vector3> vel;  //Velocity
+			std::vector<Vector3> acc;  //Acceleration
+			std::vector<Vector3> fAcc; //Resultant Force
+         std::vector<Vector3> iAcc; //Resultant Impulse
 
-			std::vector<real> invMass;
-			std::vector<real> life;
+			std::vector<real> invMass; //Inverse Mass (1/m)
+			std::vector<real> life; //Time left until death
 
+         // Registry allocation tables
          std::vector<unsigned> bReference;
          std::vector<unsigned> indirection;
          std::vector<unsigned> free;
 
-         unsigned dataInsert(Particle p);
+         // Registry manipulation methods
+         unsigned dataInsert(Particle p); // Return inserted particle reg. index
          void dataErase(unsigned idx);
 
+         // Integrate motion equations for particles between indexes
+         // "start" and "end" over a timestep "dt"
          void integrate(real dt, unsigned start, unsigned end);
 
+         // Things for multithreading
          unsigned ncpus = std::thread::hardware_concurrency();
 
          std::vector<std::thread> threads;
          std::mutex mtx;
       public:
 
+         // Steps the particle system simulation over a timestep "dt"
          void simulateParticles(real dt);
 
+         // Methods for particles insertion, removal and access
          unsigned newParticle();
-
          unsigned add(Particle p);
          unsigned add(Particle *p);
          void remove(unsigned idx);
-
          Particle get(unsigned idx);
 
+         // Methods for in-place reading and editing particles
          void addForce(const unsigned idx, const Vector3 &f);
          void addImpulse(const unsigned idx, const Vector3 &i);
 

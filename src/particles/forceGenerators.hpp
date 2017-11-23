@@ -9,10 +9,12 @@ namespace Physics{
 
    class fgSpring : public pForceGen{
       private:
+         // Targeted particles idx
          unsigned p1;
          unsigned p2;
-         real k1;
-         real d0;
+
+         real k1; // Spring const.
+         real d0; // Natural length
 
          Vector3 force(pMngr* particles, real dt, Vector3 impulse);
       public:
@@ -20,24 +22,27 @@ namespace Physics{
          void updateForce(pMngr* particles, real dt);
    };
 
+   // Linear Drag
    class fgLinearDamper : public pForceGen{
       private:
-         unsigned p;
-         real k;
+         unsigned p; // Target particle idx
+         real k;  // Drag const.
       public:
          fgLinearDamper(unsigned p, real k);
          void updateForce(pMngr* particles, real dt);
    };
 
+   // Viscous Drag
    class fgDrag : public pForceGen{
       private:
-         unsigned p;
-         real k;
+         unsigned p; // Target particle idx
+         real k;  // Drag const.
       public:
          fgDrag(unsigned p, real k);
          void updateForce(pMngr* particles, real dt);
    };
 
+   // 1/r^2 force/gravitational force
    class fgGravity : public pForceGen{
       private:
          unsigned p1;

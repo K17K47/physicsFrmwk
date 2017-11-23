@@ -59,6 +59,7 @@ namespace Physics{
       unsigned i;
       Vector3 tmpAcc = Vector3::Zero();
 
+      // Greasy 4th-order Runge-Kutta integrator
       for(i=start;i<end;i++){
          tmpAcc=(acc[i]+fAcc[i]*invMass[i])*dt;
          fAcc[i]=Vector3::Zero();
@@ -70,7 +71,7 @@ namespace Physics{
       }
    }
 
-   void pMngr::simulateParticles(real dt){
+   void pMngr::simulateParticles(real dt){   //TODO: Use a thread pool instead
       if(!ncpus || ( pos.size() < ncpus )){
          integrate(dt, 0, pos.size());
       } else {

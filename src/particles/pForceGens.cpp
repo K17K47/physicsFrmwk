@@ -51,6 +51,7 @@ namespace Physics{
    }
 
    void pForceGens::updateForces(pMngr* particles, real dt){
+   // TODO: use a thread pool
       if(!ncpus || (forceGens.size() < ncpus)){
          update(particles, dt, 0, forceGens.size());
       } else {
