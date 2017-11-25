@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -88,6 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+bin_PROGRAMS = massSpring$(EXEEXT) solarSystem$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -124,7 +126,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libphysics_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
@@ -144,6 +146,21 @@ libphysics_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(libphysics_la_CXXFLAGS) $(CXXFLAGS) $(libphysics_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
+PROGRAMS = $(bin_PROGRAMS)
+am_massSpring_OBJECTS =  \
+	samples/massSpring/massSpring-massSpring.$(OBJEXT)
+massSpring_OBJECTS = $(am_massSpring_OBJECTS)
+massSpring_DEPENDENCIES = libphysics.la
+massSpring_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(massSpring_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_solarSystem_OBJECTS =  \
+	samples/solarSystem/solarSystem-solarSystem.$(OBJEXT)
+solarSystem_OBJECTS = $(am_solarSystem_OBJECTS)
+solarSystem_DEPENDENCIES = libphysics.la
+solarSystem_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(solarSystem_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -178,8 +195,10 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(libphysics_la_SOURCES)
-DIST_SOURCES = $(libphysics_la_SOURCES)
+SOURCES = $(libphysics_la_SOURCES) $(massSpring_SOURCES) \
+	$(solarSystem_SOURCES)
+DIST_SOURCES = $(libphysics_la_SOURCES) $(massSpring_SOURCES) \
+	$(solarSystem_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -331,6 +350,14 @@ libphysics_la_SOURCES = aux/logger.cpp aux/ocl.cpp particles/forceGenerators.cpp
 libphysics_la_CPPFLAGS = -I./
 libphysics_la_CXXFLAGS = -fPIC -std=c++11
 libphysics_la_LDFLAGS = -pthread
+massSpring_SOURCES = samples/massSpring/massSpring.cpp
+massSpring_CPPFLAGS = -I./
+massSpring_CXXFLAGS = -fPIC -std=c++11
+solarSystem_SOURCES = samples/solarSystem/solarSystem.cpp
+solarSystem_CPPFLAGS = -I./
+solarSystem_CXXFLAGS = -fPIC -std=c++11
+massSpring_LDADD = libphysics.la
+solarSystem_LDADD = libphysics.la
 all: all-am
 
 .SUFFIXES:
@@ -428,6 +455,81 @@ particles/libphysics_la-pWorld.lo: particles/$(am__dirstamp) \
 
 libphysics.la: $(libphysics_la_OBJECTS) $(libphysics_la_DEPENDENCIES) $(EXTRA_libphysics_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libphysics_la_LINK) -rpath $(libdir) $(libphysics_la_OBJECTS) $(libphysics_la_LIBADD) $(LIBS)
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
+	fi; \
+	for p in $$list; do echo "$$p $$p"; done | \
+	sed 's/$(EXEEXT)$$//' | \
+	while read p p1; do if test -f $$p \
+	 || test -f $$p1 \
+	  ; then echo "$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n;h' \
+	    -e 's|.*|.|' \
+	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
+	sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
+	    else { print "f", $$3 "/" $$4, $$1; } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	    test -z "$$files" || { \
+	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	    } \
+	; done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
+	      -e 's/$$/$(EXEEXT)/' \
+	`; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
+
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+samples/massSpring/$(am__dirstamp):
+	@$(MKDIR_P) samples/massSpring
+	@: > samples/massSpring/$(am__dirstamp)
+samples/massSpring/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) samples/massSpring/$(DEPDIR)
+	@: > samples/massSpring/$(DEPDIR)/$(am__dirstamp)
+samples/massSpring/massSpring-massSpring.$(OBJEXT):  \
+	samples/massSpring/$(am__dirstamp) \
+	samples/massSpring/$(DEPDIR)/$(am__dirstamp)
+
+massSpring$(EXEEXT): $(massSpring_OBJECTS) $(massSpring_DEPENDENCIES) $(EXTRA_massSpring_DEPENDENCIES) 
+	@rm -f massSpring$(EXEEXT)
+	$(AM_V_CXXLD)$(massSpring_LINK) $(massSpring_OBJECTS) $(massSpring_LDADD) $(LIBS)
+samples/solarSystem/$(am__dirstamp):
+	@$(MKDIR_P) samples/solarSystem
+	@: > samples/solarSystem/$(am__dirstamp)
+samples/solarSystem/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) samples/solarSystem/$(DEPDIR)
+	@: > samples/solarSystem/$(DEPDIR)/$(am__dirstamp)
+samples/solarSystem/solarSystem-solarSystem.$(OBJEXT):  \
+	samples/solarSystem/$(am__dirstamp) \
+	samples/solarSystem/$(DEPDIR)/$(am__dirstamp)
+
+solarSystem$(EXEEXT): $(solarSystem_OBJECTS) $(solarSystem_DEPENDENCIES) $(EXTRA_solarSystem_DEPENDENCIES) 
+	@rm -f solarSystem$(EXEEXT)
+	$(AM_V_CXXLD)$(solarSystem_LINK) $(solarSystem_OBJECTS) $(solarSystem_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -435,6 +537,8 @@ mostlyclean-compile:
 	-rm -f aux/*.lo
 	-rm -f particles/*.$(OBJEXT)
 	-rm -f particles/*.lo
+	-rm -f samples/massSpring/*.$(OBJEXT)
+	-rm -f samples/solarSystem/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -446,6 +550,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-pMngr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-pWorld.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-particle.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@samples/massSpring/$(DEPDIR)/massSpring-massSpring.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -519,6 +625,34 @@ particles/libphysics_la-pWorld.lo: particles/pWorld.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='particles/pWorld.cpp' object='particles/libphysics_la-pWorld.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libphysics_la_CPPFLAGS) $(CPPFLAGS) $(libphysics_la_CXXFLAGS) $(CXXFLAGS) -c -o particles/libphysics_la-pWorld.lo `test -f 'particles/pWorld.cpp' || echo '$(srcdir)/'`particles/pWorld.cpp
+
+samples/massSpring/massSpring-massSpring.o: samples/massSpring/massSpring.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(massSpring_CPPFLAGS) $(CPPFLAGS) $(massSpring_CXXFLAGS) $(CXXFLAGS) -MT samples/massSpring/massSpring-massSpring.o -MD -MP -MF samples/massSpring/$(DEPDIR)/massSpring-massSpring.Tpo -c -o samples/massSpring/massSpring-massSpring.o `test -f 'samples/massSpring/massSpring.cpp' || echo '$(srcdir)/'`samples/massSpring/massSpring.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) samples/massSpring/$(DEPDIR)/massSpring-massSpring.Tpo samples/massSpring/$(DEPDIR)/massSpring-massSpring.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='samples/massSpring/massSpring.cpp' object='samples/massSpring/massSpring-massSpring.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(massSpring_CPPFLAGS) $(CPPFLAGS) $(massSpring_CXXFLAGS) $(CXXFLAGS) -c -o samples/massSpring/massSpring-massSpring.o `test -f 'samples/massSpring/massSpring.cpp' || echo '$(srcdir)/'`samples/massSpring/massSpring.cpp
+
+samples/massSpring/massSpring-massSpring.obj: samples/massSpring/massSpring.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(massSpring_CPPFLAGS) $(CPPFLAGS) $(massSpring_CXXFLAGS) $(CXXFLAGS) -MT samples/massSpring/massSpring-massSpring.obj -MD -MP -MF samples/massSpring/$(DEPDIR)/massSpring-massSpring.Tpo -c -o samples/massSpring/massSpring-massSpring.obj `if test -f 'samples/massSpring/massSpring.cpp'; then $(CYGPATH_W) 'samples/massSpring/massSpring.cpp'; else $(CYGPATH_W) '$(srcdir)/samples/massSpring/massSpring.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) samples/massSpring/$(DEPDIR)/massSpring-massSpring.Tpo samples/massSpring/$(DEPDIR)/massSpring-massSpring.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='samples/massSpring/massSpring.cpp' object='samples/massSpring/massSpring-massSpring.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(massSpring_CPPFLAGS) $(CPPFLAGS) $(massSpring_CXXFLAGS) $(CXXFLAGS) -c -o samples/massSpring/massSpring-massSpring.obj `if test -f 'samples/massSpring/massSpring.cpp'; then $(CYGPATH_W) 'samples/massSpring/massSpring.cpp'; else $(CYGPATH_W) '$(srcdir)/samples/massSpring/massSpring.cpp'; fi`
+
+samples/solarSystem/solarSystem-solarSystem.o: samples/solarSystem/solarSystem.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(solarSystem_CPPFLAGS) $(CPPFLAGS) $(solarSystem_CXXFLAGS) $(CXXFLAGS) -MT samples/solarSystem/solarSystem-solarSystem.o -MD -MP -MF samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Tpo -c -o samples/solarSystem/solarSystem-solarSystem.o `test -f 'samples/solarSystem/solarSystem.cpp' || echo '$(srcdir)/'`samples/solarSystem/solarSystem.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Tpo samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='samples/solarSystem/solarSystem.cpp' object='samples/solarSystem/solarSystem-solarSystem.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(solarSystem_CPPFLAGS) $(CPPFLAGS) $(solarSystem_CXXFLAGS) $(CXXFLAGS) -c -o samples/solarSystem/solarSystem-solarSystem.o `test -f 'samples/solarSystem/solarSystem.cpp' || echo '$(srcdir)/'`samples/solarSystem/solarSystem.cpp
+
+samples/solarSystem/solarSystem-solarSystem.obj: samples/solarSystem/solarSystem.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(solarSystem_CPPFLAGS) $(CPPFLAGS) $(solarSystem_CXXFLAGS) $(CXXFLAGS) -MT samples/solarSystem/solarSystem-solarSystem.obj -MD -MP -MF samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Tpo -c -o samples/solarSystem/solarSystem-solarSystem.obj `if test -f 'samples/solarSystem/solarSystem.cpp'; then $(CYGPATH_W) 'samples/solarSystem/solarSystem.cpp'; else $(CYGPATH_W) '$(srcdir)/samples/solarSystem/solarSystem.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Tpo samples/solarSystem/$(DEPDIR)/solarSystem-solarSystem.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='samples/solarSystem/solarSystem.cpp' object='samples/solarSystem/solarSystem-solarSystem.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(solarSystem_CPPFLAGS) $(CPPFLAGS) $(solarSystem_CXXFLAGS) $(CXXFLAGS) -c -o samples/solarSystem/solarSystem-solarSystem.obj `if test -f 'samples/solarSystem/solarSystem.cpp'; then $(CYGPATH_W) 'samples/solarSystem/solarSystem.cpp'; else $(CYGPATH_W) '$(srcdir)/samples/solarSystem/solarSystem.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -612,9 +746,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
+install-binPROGRAMS: install-libLTLIBRARIES
+
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -647,17 +783,21 @@ distclean-generic:
 	-rm -f aux/$(am__dirstamp)
 	-rm -f particles/$(DEPDIR)/$(am__dirstamp)
 	-rm -f particles/$(am__dirstamp)
+	-rm -f samples/massSpring/$(DEPDIR)/$(am__dirstamp)
+	-rm -f samples/massSpring/$(am__dirstamp)
+	-rm -f samples/solarSystem/$(DEPDIR)/$(am__dirstamp)
+	-rm -f samples/solarSystem/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf aux/$(DEPDIR) particles/$(DEPDIR)
+	-rm -rf aux/$(DEPDIR) particles/$(DEPDIR) samples/massSpring/$(DEPDIR) samples/solarSystem/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -680,7 +820,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -703,7 +843,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf aux/$(DEPDIR) particles/$(DEPDIR)
+	-rm -rf aux/$(DEPDIR) particles/$(DEPDIR) samples/massSpring/$(DEPDIR) samples/solarSystem/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -720,15 +860,16 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool cscopelist-am ctags \
-	ctags-am distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
+	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-libLTLIBRARIES install-man install-pdf \
@@ -736,7 +877,8 @@ uninstall-am: uninstall-libLTLIBRARIES
 	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-libLTLIBRARIES
 
 .PRECIOUS: Makefile
 
