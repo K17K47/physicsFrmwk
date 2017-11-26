@@ -2,6 +2,7 @@
 #define SLOTMAP_HPP_
 
 #include<vector>
+#include<mutex>
 
 template<class T>
 class slotMap{
@@ -11,6 +12,7 @@ class slotMap{
       std::vector<unsigned> indir;
       std::vector<unsigned> free;
 
+      std::mutex mtx;
    public:
       // Insertion and erasing of elements
       unsigned insert(T item);   // Returns object ID
@@ -25,6 +27,8 @@ class slotMap{
       T get(const unsigned idx) const;
 
       unsigned size();
+
+      void clear();
 };
 
 #endif

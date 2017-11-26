@@ -4,6 +4,8 @@ template<class T>
 unsigned slotMap<T>::insert(T item){
    unsigned idx;
 
+   std::lock_guard<std::mutex> guard(mtx);
+
    data.push_back(item);
 
    if(!free.size()){
@@ -21,6 +23,8 @@ unsigned slotMap<T>::insert(T item){
 
 template<class T>
 void slotMap<T>::erase(unsigned idx){
+   std::lock_guard<std::mutex> guard(mtx);
+
    unsigned ind = indir[idx];
 
    data[ind] = data.back();
@@ -35,6 +39,7 @@ void slotMap<T>::erase(unsigned idx){
 
 template<class T>
 T& slotMap<T>::operator[](unsigned idx){
+   std::lock_guard<std::mutex> guard(mtx);
    return data[indir[idx]];
 }
 
@@ -45,6 +50,7 @@ T slotMap<T>::operator[](unsigned idx) const{
 
 template<class T>
 T& slotMap<T>::get(unsigned idx){
+   std::lock_guard<std::mutex> guard(mtx);
    return data[idx];
 }
 
@@ -56,4 +62,12 @@ T slotMap<T>::get(unsigned idx) const{
 template<class T>
 unsigned slotMap<T>::size(){
    return data.size();
+}
+
+template<class T>
+void slotMap<T>::clear(){
+   data.clear();
+   indir.clear();
+   bRef.clear();
+   free.clear();
 }
