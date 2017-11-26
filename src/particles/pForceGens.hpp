@@ -3,6 +3,7 @@
 
 #include"particles/pMngr.hpp"
 #include"aux/math.hpp"
+#include"aux/slotmap.hpp"
 #include<thread>
 
 namespace Physics{
@@ -38,14 +39,7 @@ namespace Physics{
    class pForceGens{
       private:
          // Registry of Force Generators
-         std::vector<pForceGen*> forceGens;
-
-         // Registry structure members
-         std::vector<unsigned> bReference;
-         std::vector<unsigned> indirection;
-         std::vector<unsigned> free;
-         unsigned dataInsert(pForceGen *fg);
-         void dataErase(unsigned idx);
+         slotMap<pForceGen*> forceGens;
 
          // Things for multithreading
          unsigned ncpus = std::thread::hardware_concurrency();
