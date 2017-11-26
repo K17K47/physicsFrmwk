@@ -6,10 +6,11 @@ namespace Physics{
       Vector3 tmpAcc = (a + force*invMass)*dt;
       force = Vector3::Zero();
 
-      p += (v + tmpAcc*0.5)*dt;
-      v += tmpAcc + impulse*invMass;
-
+      v += impulse*invMass;
       impulse = Vector3::Zero();
+
+      p += (v + tmpAcc*0.5)*dt;
+      v += tmpAcc;
 
       if(life && life != REAL_MAX) life -= dt;
    }
@@ -55,7 +56,7 @@ namespace Physics{
    }
 
    real Particle::getMass() const{
-      if(invMass){
+      if(!invMass){
          return REAL_MAX;
       }else{
          return 1.0/invMass;
