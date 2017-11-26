@@ -1,6 +1,19 @@
 #include"particles/particle.hpp"
 
 namespace Physics{
+   void Particle::integrate(real dt){
+      //Greasy 4th-order Runge-Kutta integrator
+      Vector3 tmpAcc = (a + force*invMass)*dt;
+      force = Vector3::Zero();
+
+      p += (v + tmpAcc*0.5)*dt;
+      v += tmpAcc + impulse*invMass;
+
+      impulse = Vector3::Zero();
+
+      if(life && life != REAL_MAX) life -= dt;
+   }
+
    void Particle::addForce(const Vector3 &f){
       force += f;
    }
