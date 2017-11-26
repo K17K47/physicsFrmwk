@@ -12,12 +12,12 @@ int main(){
 
    for(int i=0; i<2; i++){
       pIdx[i] = world.particles->newParticle();
-      world.particles->setPos(pIdx[i], Vector3(i, 0.0, 0.0));
-      world.particles->setVel(pIdx[i], Vector3(0.0, 0.0, 0.0));
-      world.particles->setAcc(pIdx[i], Vector3(0.0, 0.0, 0.0));
-      world.particles->setMass(pIdx[i], 10.0);
-      world.particles->clearForce(pIdx[i]);
-      world.particles->clearImpulse(pIdx[i]);
+      *(world.particles)[pIdx[i]].setPos(Vector3(i, 0.0, 0.0));
+      *(world.particles)[pIdx[i]].setVel(Vector3(0.0, 0.0, 0.0));
+      *(world.particles)[pIdx[i]].setAcc(Vector3(0.0, 0.0, 0.0));
+      *(world.particles)[pIdx[i]].setMass(10.0);
+      *(world.particles)[pIdx[i]].clearForce();
+      *(world.particles)[pIdx[i]].clearImpulse();
    }
 
    Physics::pForceGen* spring = new Physics::fgSpring(pIdx[0], pIdx[1], 20.0, 0.5);
@@ -32,14 +32,14 @@ int main(){
    while(t < TMAX){
       std::cout<<t;
       for(int i=0; i<2; i++){
-         if(world.particles->stillAlive(pIdx[i])){
-            Vector3 pos = world.particles->getPos(pIdx[i]);
+         if(*(world.particles)[pIdx[i]].stillAlive()){
+            Vector3 pos = *(world.particles)[pIdx[i]].getPos();
             std::cout<<"\t"<<pos[0];
          }else{
             std::cout<<"Particula "<<i<<" died"<<std::endl;
          }
       }
-      std::cout<<"\t"<<(world.particles->getPos(pIdx[0])-world.particles->getPos(pIdx[1])).norm()<<std::endl;
+      std::cout<<"\t"<<(*(world.particles)[pIdx[0]].getPos()-*(world.particles)[pIdx[1]].getPos()).norm()<<std::endl;
 
       world.runPhysics(DELTAT);
       t+=DELTAT;
