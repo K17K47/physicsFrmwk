@@ -1,7 +1,7 @@
 #include"aux/slotmap.hpp"
 
 template<class T>
-unsigned slotMap::insert(T item){
+unsigned slotMap<T>::insert(T item){
    unsigned idx;
 
    data.push_back(item);
@@ -20,7 +20,7 @@ unsigned slotMap::insert(T item){
 }
 
 template<class T>
-void slotMap::erase(unsigned idx){
+void slotMap<T>::erase(unsigned idx){
    unsigned ind = indir[idx];
 
    data[ind] = data.back();
@@ -34,21 +34,26 @@ void slotMap::erase(unsigned idx){
 }
 
 template<class T>
-T& slotMap::operator[](unsigned idx){
+T& slotMap<T>::operator[](unsigned idx){
    return data[indir[idx]];
 }
 
 template<class T>
-const T& slotMap::operator[](unsigned idx){
+T slotMap<T>::operator[](unsigned idx) const{
    return data[indir[idx]];
 }
 
 template<class T>
-T& slotMap::get(unsigned idx){
+T& slotMap<T>::get(unsigned idx){
    return data[idx];
 }
 
 template<class T>
-const T& slotMap::get(unsigned idx){
+T slotMap<T>::get(unsigned idx) const{
    return data[idx];
+}
+
+template<class T>
+unsigned slotMap<T>::size(){
+   return data.size();
 }

@@ -18,11 +18,13 @@ class slotMap{
 
       // Overload for access using object ID
       T& operator[](const unsigned idx);
-      const T& operator[](const unsigned idx);
+      T operator[](const unsigned idx) const;
 
       // Direct Data access
       T& get(const unsigned idx);
-      const T& get(const unsigned idx);
+      T get(const unsigned idx) const;
+
+      unsigned size();
 };
 
 #endif

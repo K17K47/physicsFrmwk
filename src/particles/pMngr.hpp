@@ -3,7 +3,7 @@
 
 #include"aux/math.hpp"
 #include"particles/particle.hpp"
-#include"aux/slotMap.cpp"
+#include"aux/slotmap.cpp"
 #include<thread>
 #include<mutex>
 
@@ -33,6 +33,7 @@ namespace Physics{
          unsigned add(Particle *p);
          void remove(const unsigned idx);
          Particle& operator[](const unsigned idx);
+         Particle operator[](const unsigned idx) const;
 	};
 };
 

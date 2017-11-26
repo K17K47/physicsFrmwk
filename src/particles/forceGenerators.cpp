@@ -17,12 +17,12 @@ namespace Physics{
 
       Vector3 i = (1.0/6.0)*dt*(c1+c4+2*(c2+c3));
 
-      particles[p1].addImpulse(i);
-      particles[p2].addImpulse(-i);
+      (*particles)[p1].addImpulse(i);
+      (*particles)[p2].addImpulse(-i);
    }
 
    Vector3 fgSpring::force(pMngr* particles, real dt, Vector3 impulse){
-      Vector3 vd = particles[p2].getPos - particles[p1].getPos();
+      Vector3 vd = (*particles)[p2].getPos() - (*particles)[p1].getPos();
       real d = vd.norm();
       return ((k1*(d-d0))/d)*vd;
    }
@@ -34,9 +34,9 @@ namespace Physics{
    }
 
    void fgLinearDamper::updateForce(pMngr* particles, real dt){
-      Vector3 f = particles[p].getVel();
-      f *= -(k*particles[p].getMass());
-      particles[p].addForce(f);
+      Vector3 f = (*particles)[p].getVel();
+      f *= -(k*(*particles)[p].getMass());
+      (*particles)[p].addForce(f);
    }
 
    fgDrag::fgDrag(unsigned p, real k){
@@ -45,11 +45,11 @@ namespace Physics{
    }
 
    void fgDrag::updateForce(pMngr* particles, real dt){
-      Vector3 f = particles[p].getVel();
+      Vector3 f = (*particles)[p].getVel();
       if(f.norm()){
          f.normalize();
-         f *= -(k*particles[p].getMass());
-         particles[p].addForce(f);
+         f *= -(k*(*particles)[p].getMass());
+         (*particles)[p].addForce(f);
       }
    }
 
@@ -67,14 +67,14 @@ namespace Physics{
 
       Vector3 i = (1.0/6.0)*dt*(c1+c4+2*(c2+c3));
 
-      particles[p1].addImpulse(i);
-      particles[p2].addImpulse(-i);
+      (*particles)[p1].addImpulse(i);
+      (*particles)[p2].addImpulse(-i);
    }
 
    Vector3 fgGravity::force(pMngr* particles, real dt, Vector3 velocity){
-      Vector3 vd = particles[p2].getPos() - particles[p1].getPos();
+      Vector3 vd = (*particles)[p2].getPos() - (*particles)[p1].getPos();
       real d = vd.norm();
-      return (k1/(d*d*d))*particles[p1].getMass()*particles[p2].getMass()*vd;
+      return (k1/(d*d*d))*(*particles)[p1].getMass()*(*particles)[p2].getMass()*vd;
    }
 };
 
