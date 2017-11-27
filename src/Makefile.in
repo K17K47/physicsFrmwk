@@ -131,7 +131,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libphysics_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
 am_libphysics_la_OBJECTS = aux/libphysics_la-logger.lo \
-	aux/libphysics_la-ocl.lo \
+	aux/libphysics_la-ocl.lo aux/libphysics_la-slotmap.lo \
 	particles/libphysics_la-forceGenerators.lo \
 	particles/libphysics_la-particle.lo \
 	particles/libphysics_la-pForceGens.lo \
@@ -195,6 +195,24 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
 SOURCES = $(libphysics_la_SOURCES) $(massSpring_SOURCES) \
 	$(solarSystem_SOURCES)
 DIST_SOURCES = $(libphysics_la_SOURCES) $(massSpring_SOURCES) \
@@ -346,7 +364,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libphysics.la
-libphysics_la_SOURCES = aux/logger.cpp aux/ocl.cpp particles/forceGenerators.cpp particles/particle.cpp particles/pForceGens.cpp particles/pMngr.cpp particles/pWorld.cpp
+libphysics_la_SOURCES = aux/logger.cpp aux/ocl.cpp aux/ThreadPool.h aux/slotmap.cpp particles/forceGenerators.cpp particles/particle.cpp particles/pForceGens.cpp particles/pMngr.cpp particles/pWorld.cpp
 libphysics_la_CPPFLAGS = -I./
 libphysics_la_CXXFLAGS = -fPIC -std=c++11
 libphysics_la_LDFLAGS = -pthread
@@ -435,6 +453,8 @@ aux/$(DEPDIR)/$(am__dirstamp):
 aux/libphysics_la-logger.lo: aux/$(am__dirstamp) \
 	aux/$(DEPDIR)/$(am__dirstamp)
 aux/libphysics_la-ocl.lo: aux/$(am__dirstamp) \
+	aux/$(DEPDIR)/$(am__dirstamp)
+aux/libphysics_la-slotmap.lo: aux/$(am__dirstamp) \
 	aux/$(DEPDIR)/$(am__dirstamp)
 particles/$(am__dirstamp):
 	@$(MKDIR_P) particles
@@ -545,6 +565,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@aux/$(DEPDIR)/libphysics_la-logger.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@aux/$(DEPDIR)/libphysics_la-ocl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@aux/$(DEPDIR)/libphysics_la-slotmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-forceGenerators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-pForceGens.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@particles/$(DEPDIR)/libphysics_la-pMngr.Plo@am__quote@
@@ -590,6 +611,13 @@ aux/libphysics_la-ocl.lo: aux/ocl.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='aux/ocl.cpp' object='aux/libphysics_la-ocl.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libphysics_la_CPPFLAGS) $(CPPFLAGS) $(libphysics_la_CXXFLAGS) $(CXXFLAGS) -c -o aux/libphysics_la-ocl.lo `test -f 'aux/ocl.cpp' || echo '$(srcdir)/'`aux/ocl.cpp
+
+aux/libphysics_la-slotmap.lo: aux/slotmap.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libphysics_la_CPPFLAGS) $(CPPFLAGS) $(libphysics_la_CXXFLAGS) $(CXXFLAGS) -MT aux/libphysics_la-slotmap.lo -MD -MP -MF aux/$(DEPDIR)/libphysics_la-slotmap.Tpo -c -o aux/libphysics_la-slotmap.lo `test -f 'aux/slotmap.cpp' || echo '$(srcdir)/'`aux/slotmap.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) aux/$(DEPDIR)/libphysics_la-slotmap.Tpo aux/$(DEPDIR)/libphysics_la-slotmap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='aux/slotmap.cpp' object='aux/libphysics_la-slotmap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libphysics_la_CPPFLAGS) $(CPPFLAGS) $(libphysics_la_CXXFLAGS) $(CXXFLAGS) -c -o aux/libphysics_la-slotmap.lo `test -f 'aux/slotmap.cpp' || echo '$(srcdir)/'`aux/slotmap.cpp
 
 particles/libphysics_la-forceGenerators.lo: particles/forceGenerators.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libphysics_la_CPPFLAGS) $(CPPFLAGS) $(libphysics_la_CXXFLAGS) $(CXXFLAGS) -MT particles/libphysics_la-forceGenerators.lo -MD -MP -MF particles/$(DEPDIR)/libphysics_la-forceGenerators.Tpo -c -o particles/libphysics_la-forceGenerators.lo `test -f 'particles/forceGenerators.cpp' || echo '$(srcdir)/'`particles/forceGenerators.cpp
