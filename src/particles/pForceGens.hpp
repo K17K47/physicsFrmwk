@@ -4,7 +4,7 @@
 #include"particles/pMngr.hpp"
 #include"aux/math.hpp"
 #include"aux/slotmap.hpp"
-#include<thread>
+#include"aux/ThreadPool.h"
 
 namespace Physics{
    // Base class for "Force Generators", the way of computing forces between
@@ -42,8 +42,7 @@ namespace Physics{
          slotMap<pForceGen*> forceGens;
 
          // Things for multithreading
-         unsigned ncpus = std::thread::hardware_concurrency();
-         std::vector<std::thread> threads;
+         ThreadPool pool;
 
          // Compute forces for "particles" particles over a timestep "dt".
          // Runs for Force Gens with indexes between "start" and "end"

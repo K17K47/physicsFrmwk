@@ -15,21 +15,24 @@ namespace Physics{
    }
 
    void pForceGens::updateForces(pMngr* particles, real dt){
-   // TODO: use a thread pool
-      if(!ncpus || (forceGens.size() < ncpus)){
-         update(particles, dt, 0, forceGens.size());
+      unsigned ncpus = std::thread::hardware_concurrency();
+      unsigned nFG = forceGens.size();
+
+      if(!ncpus || (nFG < ncpus)){
+         update(particles, dt, 0, nFG);
       } else {
-         unsigned tPerCore = forceGens.size()/ncpus, i;
+         unsigned tPerCore = nFG/ncpus, i;
 
-         for(i=0; i<ncpus-1; i++){
-            threads.push_back(std::thread(&pForceGens::update, this, particles, dt, i*tPerCore, (i+1)*tPerCore));
-         }
+         for(i=0; i<ncpus-1; i++)
+            pool.enqueue([particles,dt,i,tPerCore,this]{
+               this->update(particles, dt,i*tPerCore,(i+1)*tPerCore);
+            });
 
-         threads.push_back(std::thread(&pForceGens::update, this, particles, dt, i*tPerCore, forceGens.size()));
+         pool.enqueue([particles,dt,i,tPerCore,nFG,this]{
+               this->update(particles, dt,i*tPerCore, nFG);
+         });
 
-         for(i=0; i<ncpus; i++) threads[i].join();
-
-         threads.clear();
+         pool.waitFinish();
       }
    }
 
