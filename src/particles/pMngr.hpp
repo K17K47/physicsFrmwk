@@ -4,8 +4,8 @@
 #include"aux/math.hpp"
 #include"particles/particle.hpp"
 #include"aux/slotmap.cpp"
+#include"aux/ThreadPool.h"
 #include<thread>
-#include<mutex>
 
 namespace Physics{
 
@@ -18,12 +18,8 @@ namespace Physics{
          void integrate(real dt, unsigned start, unsigned end);
 
          // Things for multithreading
-         unsigned ncpus = std::thread::hardware_concurrency();
-
-         std::vector<std::thread> threads;
-         std::mutex mtx;
+         ThreadPool pool;
       public:
-
          // Steps the particle system simulation over a timestep "dt"
          void simulateParticles(real dt);
 

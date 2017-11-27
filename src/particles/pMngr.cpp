@@ -9,21 +9,20 @@ namespace Physics{
    }
 
    void pMngr::simulateParticles(real dt){   //TODO: Use a thread pool instead
-      if(!ncpus || ( reg.size() < ncpus )){
-         integrate(dt, 0, reg.size());
+      unsigned ncpus = std::thread::hardware_concurrency();
+      unsigned nPart = reg.size();
+
+      if(!ncpus || ( nPart < ncpus )){
+         integrate(dt, 0, nPart);
       } else {
-         unsigned tPerCore = reg.size()/ncpus, i;
+         unsigned tPerCore = nPart/ncpus, i;
 
-         for(i=0; i<ncpus-1; i++){
-            threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, (i+1)*tPerCore));
-         }
+         for(i=0;i<ncpus-1;i++)
+            pool.enqueue([dt,i,tPerCore,this](){this->integrate(dt,i*tPerCore,(i+1)*tPerCore);});
 
-         threads.push_back(std::thread(&pMngr::integrate, this, dt, i*tPerCore, reg.size()));
+         pool.enqueue([dt,ncpus,tPerCore,nPart,this](){this->integrate(dt,ncpus*tPerCore,nPart);});
 
-         for(i=0; i<ncpus; i++) threads[i].join();
-
-         threads.clear();
-
+         pool.waitFinish();
       }
    }
 
