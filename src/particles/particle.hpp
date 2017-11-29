@@ -2,7 +2,7 @@
 #define PARTICLE_HPP_
 
 #include"aux/math.hpp"
-#include<thread>
+#include<mutex>
 
 namespace Physics{
 
