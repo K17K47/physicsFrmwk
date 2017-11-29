@@ -38,7 +38,7 @@ namespace Physics{
 
    void pForceGens::update(pMngr* particles, real dt, unsigned start, unsigned end){
       for(unsigned i=start; i<end; i++){
-         forceGens[i]->updateForce(particles, dt);
+         forceGens.get(i)->updateForce(particles, dt);
       }
    }
 };
