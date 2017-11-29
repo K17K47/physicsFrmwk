@@ -2,6 +2,7 @@
 #define PARTICLE_HPP_
 
 #include"aux/math.hpp"
+#include<thread>
 
 namespace Physics{
 
@@ -18,6 +19,7 @@ namespace Physics{
 
 			real life = 0.0;
 
+         std::mutex mtx;
 		public:
 			Particle(){};
 			Particle(Vector3 pos, real mass) : p(pos),  invMass(1/mass) {}

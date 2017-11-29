@@ -39,7 +39,7 @@ void slotMap<T>::erase(unsigned idx){
 
 template<class T>
 T& slotMap<T>::operator[](unsigned idx){
-   std::lock_guard<std::mutex> guard(mtx);
+   //std::lock_guard<std::mutex> guard(mtx);
    return data[indir[idx]];
 }
 
@@ -50,7 +50,7 @@ T slotMap<T>::operator[](unsigned idx) const{
 
 template<class T>
 T& slotMap<T>::get(unsigned idx){
-   std::lock_guard<std::mutex> guard(mtx);
+   //std::lock_guard<std::mutex> guard(mtx);
    return data[idx];
 }
 
