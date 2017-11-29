@@ -51,22 +51,22 @@ namespace Physics{
       life = l;
    }
 
-   Vector3 Particle::getPos() const{
+   Vector3 Particle::getPos() {
       std::lock_guard<std::mutex> lock(mtx);
       return p;
    }
 
-   Vector3 Particle::getVel() const{
+   Vector3 Particle::getVel() {
       std::lock_guard<std::mutex> lock(mtx);
       return v;
    }
 
-   Vector3 Particle::getAcc() const{
+   Vector3 Particle::getAcc() {
       std::lock_guard<std::mutex> lock(mtx);
       return a;
    }
 
-   real Particle::getMass() const{
+   real Particle::getMass() {
       std::lock_guard<std::mutex> lock(mtx);
       if(!invMass){
          return REAL_MAX;
@@ -75,62 +75,62 @@ namespace Physics{
       }
    }
 
-   real Particle::getInvMass() const{
+   real Particle::getInvMass() {
       std::lock_guard<std::mutex> lock(mtx);
       return invMass;
    }
 
-   real Particle::getLife() const{
+   real Particle::getLife() {
       std::lock_guard<std::mutex> lock(mtx);
       return life;
    }
 
-   void Particle::getPos(Vector3 *pos) const{
+   void Particle::getPos(Vector3 *pos) {
       std::lock_guard<std::mutex> lock(mtx);
       *pos = p;
    }
 
-   void Particle::getVel(Vector3 *vel) const{
+   void Particle::getVel(Vector3 *vel) {
       std::lock_guard<std::mutex> lock(mtx);
       *vel = v;
    }
 
-   void Particle::getAcc(Vector3 *acc) const{
+   void Particle::getAcc(Vector3 *acc) {
       std::lock_guard<std::mutex> lock(mtx);
       *acc = a;
    }
 
-   void Particle::getMass(real *m) const{
+   void Particle::getMass(real *m) {
       std::lock_guard<std::mutex> lock(mtx);
       *m = 1.0/invMass;
    }
 
-   void Particle::getInvMass(real *m) const{
+   void Particle::getInvMass(real *m) {
       std::lock_guard<std::mutex> lock(mtx);
       *m = invMass;
    }
 
-   void Particle::getLife(real *l) const{
+   void Particle::getLife(real *l) {
       std::lock_guard<std::mutex> lock(mtx);
       *l = life;
    }
 
-   bool Particle::hasFiniteMass() const{
+   bool Particle::hasFiniteMass() {
       std::lock_guard<std::mutex> lock(mtx);
       return invMass >= 0.0;
    }
 
-   bool Particle::stillAlive() const{
+   bool Particle::stillAlive() {
       std::lock_guard<std::mutex> lock(mtx);
       return life >= 0.0;
    }
 
-   Vector3 Particle::getForce() const{
+   Vector3 Particle::getForce() {
       std::lock_guard<std::mutex> lock(mtx);
       return force;
    }
 
-   void Particle::getForce(Vector3 *f) const{
+   void Particle::getForce(Vector3 *f) {
       std::lock_guard<std::mutex> lock(mtx);
       *f = force;
    }
@@ -140,12 +140,12 @@ namespace Physics{
       force = Vector3::Zero();
    }
 
-   Vector3 Particle::getImpulse() const{
+   Vector3 Particle::getImpulse() {
       std::lock_guard<std::mutex> lock(mtx);
       return impulse;
    }
 
-   void Particle::getImpulse(Vector3 *i) const{
+   void Particle::getImpulse(Vector3 *i) {
       std::lock_guard<std::mutex> lock(mtx);
       *i = impulse;
    }

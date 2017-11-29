@@ -36,29 +36,29 @@ namespace Physics{
 			void setMass(const real &m);
 			void setLife(const real &l);
 
-			Vector3 getPos() const;
-			Vector3 getVel() const;
-			Vector3 getAcc() const;
-			real getMass() const;
-			real getInvMass() const;
-			real getLife() const;
+			Vector3 getPos();
+			Vector3 getVel();
+			Vector3 getAcc();
+			real getMass();
+			real getInvMass();
+			real getLife();
 
-			void getPos(Vector3 *pos) const;
-			void getVel(Vector3 *vel) const;
-			void getAcc(Vector3 *acc) const;
-			void getMass(real *m) const;
-			void getInvMass(real *m) const;
-			void getLife(real *l) const;
+			void getPos(Vector3 *pos);
+			void getVel(Vector3 *vel);
+			void getAcc(Vector3 *acc);
+			void getMass(real *m);
+			void getInvMass(real *m);
+			void getLife(real *l);
 
-			bool hasFiniteMass() const;
-			bool stillAlive() const;
+			bool hasFiniteMass();
+			bool stillAlive();
 
-			Vector3 getForce() const;
-			void getForce(Vector3 *f) const;
+			Vector3 getForce();
+			void getForce(Vector3 *f);
 			void clearForce();
 
-         Vector3 getImpulse() const;
-         void getImpulse(Vector3 *f) const;
+         Vector3 getImpulse();
+         void getImpulse(Vector3 *f);
          void clearImpulse();
 	};
 };
