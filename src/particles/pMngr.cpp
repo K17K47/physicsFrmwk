@@ -17,7 +17,7 @@ namespace Physics{
       } else {
          unsigned tPerCore = nPart/ncpus, i;
 
-         for(i=0;i<ncpus-1;i++)
+         for(i=0;i<ncpus;i++)
             pool.enqueue([dt,i,tPerCore,this](){this->integrate(dt,i*tPerCore,(i+1)*tPerCore);});
 
          pool.enqueue([dt,ncpus,tPerCore,nPart,this](){this->integrate(dt,ncpus*tPerCore,nPart);});

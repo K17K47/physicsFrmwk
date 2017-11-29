@@ -23,13 +23,13 @@ namespace Physics{
       } else {
          unsigned tPerCore = nFG/ncpus, i;
 
-         for(i=0; i<ncpus-1; i++)
+         for(i=0; i<ncpus; i++)
             pool.enqueue([particles,dt,i,tPerCore,this]{
                this->update(particles, dt,i*tPerCore,(i+1)*tPerCore);
             });
 
-         pool.enqueue([particles,dt,i,tPerCore,nFG,this]{
-               this->update(particles, dt,i*tPerCore, nFG);
+         pool.enqueue([particles,dt,ncpus,tPerCore,nFG,this]{
+               this->update(particles, dt,ncpus*tPerCore, nFG);
          });
 
          pool.waitFinish();
